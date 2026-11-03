@@ -23,6 +23,22 @@
           }
         }
       }
+    },
+    "/api/menu": {
+      "get": {
+        "tags": [
+          "Menú"
+        ],
+        "description": "Obtiene los productos de El Rincón del Sabor",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   }
 }
