@@ -1,6 +1,7 @@
 import express, { type Request, type Response } from "express"; 
 import swaggerRouter from "./routes/swagger.router.js";
 import cors from "cors"
+import pool from "./config/db.js";
 
 const port = process.env.PORT; 
 
@@ -21,6 +22,23 @@ app.get("/", (req: Request, res: Response) => {
         status: "Server online",
         version: "1.0.0"
     });
+});
+
+app.get("/api/menu", async (req: Request, res: Response) => {
+    // #swagger.tags = ['Menú']
+    // #swagger.description = 'Obtiene los productos de El Rincón del Sabor'
+
+    try {
+        const result = await pool.query("SELECT * FROM products");
+
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error("Error al consultar el menú:", error);
+
+        res.status(500).json({
+            mensaje: "Error al obtener los productos"
+        });
+    }
 });
 
 app.listen(port, () => {
