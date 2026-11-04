@@ -1,3 +1,4 @@
+// src/libs/swagger.lib.ts
 import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
@@ -10,10 +11,9 @@ const doc = {
     schemes: ['http'],
 };
 
-const outputFile = 'swagger-output.json';
+const outputFile = './swagger-output.json'; // Asegúrate de que apunte a la raíz o donde lo necesites
+const endpointsFiles = ['./src/index.ts']; // O la ruta a tus archivos de rutas
 
-const endpointsFiles = ['./src/index.ts'];
-
-swaggerAutogen()(outputFile, endpointsFiles, doc).then(async () => {
-    await import('../index.js');
+swaggerAutogen()(outputFile, endpointsFiles, doc).then(() => {
+    console.log("Documentación de Swagger generada con éxito 🚀");
 });
