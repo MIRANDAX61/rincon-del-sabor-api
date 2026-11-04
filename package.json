@@ -4,11 +4,11 @@
   "description": "This is a basic express ts template with swagger.",
   "main": "src/index.ts",
   "type": "module",
-"scripts": {
-  "dev": "tsx src/libs/swagger.lib.ts && tsx --watch --env-file=.env src/index.ts",
-  "build": "tsc",
-  "start": "tsx dist/index.js",
-  "swagger": "tsx src/libs/swagger.lib.ts"
+  "scripts": {
+    "dev": "tsx src/libs/swagger.lib.ts && tsx --watch --env-file=.env src/index.ts",
+    "build": "tsc",
+    "start": "tsx dist/index.js",
+    "swagger": "tsx src/libs/swagger.lib.ts"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +18,8 @@
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "pg": "^8.23.1",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
