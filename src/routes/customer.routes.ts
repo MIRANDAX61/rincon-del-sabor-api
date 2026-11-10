@@ -16,7 +16,7 @@ const router : Router = Router();
 
 router.get("/customers", getCustomers);
 
-router.get("/customer/:id", getCustomerById);
+router.get("/customers/:id", getCustomerById);
 
 router.post("/customers", validateCustomer, createCustomer);
 

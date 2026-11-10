@@ -1,8 +1,29 @@
 import { query } from "../config/db.js";
- 
+import type { GetProductsQueryInput } from "../schemas/product.schema.js";
+
 export const ProductModel = {
-  async listar() {
-    const { rows } = await query("SELECT * FROM products ORDER BY id ASC");
+  async listar(filtros: GetProductsQueryInput) {
+    const { maxPrice, page, limit } = filtros;
+
+    let sql = "SELECT * FROM products";
+    const valores: number[] = [];
+
+    if (maxPrice !== undefined) {
+      valores.push(maxPrice);
+      sql += ` WHERE price <= $${valores.length}`;
+    }
+
+    sql += " ORDER BY id ASC";
+
+    const offset = (page - 1) * limit;
+
+    valores.push(limit);
+    sql += ` LIMIT $${valores.length}`;
+
+    valores.push(offset);
+    sql += ` OFFSET $${valores.length}`;
+
+    const { rows } = await query(sql, valores);
     return rows;
   },
 

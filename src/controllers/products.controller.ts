@@ -1,21 +1,83 @@
 import type { Request, Response } from "express";
 import pool from "../config/db.js";
 import { ProductModel } from "../models/product.model.js";
+import { getProductsQuerySchema } from "../schemas/product.schema.js";
 
 export async function getAllProducts(req: Request, res: Response) {
-    try {
-        const resultado = await ProductModel.listar();
+  /* #swagger.tags = ['Products']
+     #swagger.summary = 'Listar productos con filtro y paginación'
+  */
 
-        res.status(200).json(resultado);
-    } catch (error) {
-        console.error("Error al consultar los productos:", error);
+  /* #swagger.parameters['maxPrice'] = {
+    in: 'query',
+    description: 'Precio máximo. Omitir para no filtrar.',
+    required: false,
+    type: 'number',
+    minimum: 0
+  } */
 
-        res.status(500).json({
-            mensaje: "Error al obtener los productos"
-        });
+  /* #swagger.parameters['page'] = {
+    in: 'query',
+    description: 'Página solicitada.',
+    required: false,
+    type: 'integer',
+    minimum: 1,
+    default: 1
+  } */
+
+  /* #swagger.parameters['limit'] = {
+    in: 'query',
+    description: 'Cantidad de productos por página.',
+    required: false,
+    type: 'integer',
+    minimum: 1,
+    maximum: 100,
+    default: 10
+  } */
+
+  /* #swagger.responses[200] = {
+    description: 'Lista de productos obtenida correctamente.'
+  } */
+
+  /* #swagger.responses[400] = {
+    description: 'Parámetros de consulta inválidos.'
+  } */
+
+  /* #swagger.responses[500] = {
+    description: 'Error al obtener los productos.'
+  } */
+
+  try {
+    const result = getProductsQuerySchema.safeParse(req.query);
+
+    if (!result.success) {
+      res.status(400).json({
+        mensaje: "Parámetros de consulta inválidos",
+        errores: result.error.issues
+      });
+      return;
     }
-}
 
+    const { page, limit } = result.data;
+
+    if (!Number.isSafeInteger((page - 1) * limit)) {
+      res.status(400).json({
+        mensaje: "La página solicitada es demasiado grande"
+      });
+      return;
+    }
+
+    const productos = await ProductModel.listar(result.data);
+
+    res.status(200).json(productos);
+  } catch (error) {
+    console.error("Error al consultar los productos:", error);
+
+    res.status(500).json({
+      mensaje: "Error al obtener los productos"
+    });
+  }
+}
 
 export async function getProduct(req: Request, res: Response) {
   /*#swagger.tags = ['Products']  #swagger.summary = 'Obtener un producto por su ID' */

@@ -2,6 +2,17 @@ import type { Request, Response } from "express";
 import { CustomerModel } from "../models/customer.model.js";
 
 export async function getCustomers(req: Request, res: Response) {
+    /* #swagger.tags = ['Customers']
+    #swagger.summary = 'Listar todos los clientes'
+    */
+
+    /* #swagger.responses[200] = {
+        description: 'Lista de clientes obtenida correctamente.'
+    } */
+
+    /* #swagger.responses[500] = {
+        description: 'Error al obtener los clientes.'
+    } */
     try {
         const customers = await CustomerModel.findAll();
 
@@ -16,6 +27,33 @@ export async function getCustomers(req: Request, res: Response) {
 }
 
 export async function getCustomerById(req: Request, res: Response) {
+    /* #swagger.tags = ['Customers']
+     #swagger.summary = 'Obtener un cliente por su ID'
+    */
+
+    /* #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID del cliente.',
+        required: true,
+        type: 'integer',
+        minimum: 1
+    } */
+
+    /* #swagger.responses[200] = {
+        description: 'Cliente encontrado.'
+    } */
+
+    /* #swagger.responses[400] = {
+        description: 'El ID debe ser un entero positivo.'
+    } */
+
+    /* #swagger.responses[404] = {
+        description: 'Cliente no encontrado.'
+    } */
+
+    /* #swagger.responses[500] = {
+        description: 'Error al obtener el cliente.'
+    } */
     const id = Number(req.params.id);
 
     if (!Number.isSafeInteger(id) || id <= 0) {
@@ -46,6 +84,36 @@ export async function getCustomerById(req: Request, res: Response) {
 }
 
 export async function createCustomer(req: Request, res: Response) {
+    /* #swagger.tags = ['Customers']
+    #swagger.summary = 'Crear un cliente'
+    */
+
+    /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Nombre y correo obligatorios. Teléfono opcional.',
+        required: true,
+        schema: {
+            $name: 'Leonardo',
+            $email: 'leo@ejemplo.com',
+            phone_number: '70012345'
+        }
+    } */
+
+    /* #swagger.responses[201] = {
+        description: 'Cliente creado correctamente.'
+    } */
+
+    /* #swagger.responses[400] = {
+        description: 'Los datos no cumplen la validación de Zod.'
+    } */
+
+    /* #swagger.responses[409] = {
+        description: 'Los datos duplican un valor con restricción única.'
+    } */
+
+    /* #swagger.responses[500] = {
+        description: 'Error al crear el cliente.'
+    } */
     try {
         const customer = await CustomerModel.create(req.body);
 
@@ -71,6 +139,48 @@ export async function createCustomer(req: Request, res: Response) {
 }
 
 export async function updateCustomer(req: Request, res: Response) {
+    /* #swagger.tags = ['Customers']
+    #swagger.summary = 'Actualizar un cliente'
+    */
+
+    /* #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'ID del cliente que se desea actualizar.',
+        required: true,
+        type: 'integer',
+        minimum: 1
+    } */
+
+    /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Nombre y correo obligatorios. Teléfono opcional.',
+        required: true,
+        schema: {
+            $name: 'Leonardo Miranda',
+            $email: 'leonardo@ejemplo.com',
+            phone_number: '70012345'
+        }
+    } */
+
+    /* #swagger.responses[200] = {
+        description: 'Cliente actualizado correctamente.'
+    } */
+
+    /* #swagger.responses[400] = {
+        description: 'ID inválido o datos rechazados por Zod.'
+    } */
+
+    /* #swagger.responses[404] = {
+        description: 'Cliente no encontrado.'
+    } */
+
+    /* #swagger.responses[409] = {
+        description: 'Los datos duplican un valor con restricción única.'
+    } */
+
+    /* #swagger.responses[500] = {
+        description: 'Error al actualizar el cliente.'
+    } */
     const id = Number(req.params.id);
 
     if (!Number.isSafeInteger(id) || id <= 0) {

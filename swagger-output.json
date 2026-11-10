@@ -1,35 +1,96 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "API de Estudiantes",
-    "description": "Documentación automática generada para el bootcamp",
+    "title": "API Rincón del Sabor",
+    "description": "Documentación de productos, clientes y ventas",
     "version": "1.0.0"
   },
   "host": "localhost:3000",
-  "basePath": "/",
+  "basePath": "/api",
   "schemes": [
     "http"
   ],
   "paths": {
-    "/": {
+    "/menu": {
       "get": {
         "tags": [
-          "Tests"
+          "Products"
         ],
+        "summary": "Listar productos con filtro y paginación",
         "description": "",
+        "parameters": [
+          {
+            "name": "maxPrice",
+            "in": "query",
+            "description": "Precio máximo. Omitir para no filtrar.",
+            "required": false,
+            "type": "number",
+            "minimum": 0
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Página solicitada.",
+            "required": false,
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Cantidad de productos por página.",
+            "required": false,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Lista de productos obtenida correctamente."
+          },
+          "400": {
+            "description": "Parámetros de consulta inválidos."
+          },
+          "500": {
+            "description": "Error al obtener los productos."
           }
         }
-      }
-    },
-    "/api/menu": {
-      "get": {
+      },
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Crear un nuevo producto",
         "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "price": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -37,7 +98,7 @@
         }
       }
     },
-    "/api/products/{id}": {
+    "/menu/{id}": {
       "get": {
         "tags": [
           "Products"
@@ -115,30 +176,214 @@
         }
       }
     },
-    "/api/products": {
+    "/customers": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Listar todos los clientes",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Lista de clientes obtenida correctamente."
+          },
+          "500": {
+            "description": "Error al obtener los clientes."
+          }
+        }
+      },
       "post": {
         "tags": [
-          "Products"
+          "Customers"
         ],
-        "summary": "Crear un nuevo producto",
+        "summary": "Crear un cliente",
         "description": "",
         "parameters": [
           {
             "name": "body",
             "in": "body",
+            "description": "Nombre y correo obligatorios. Teléfono opcional.",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "Leonardo"
                 },
-                "description": {
-                  "example": "any"
+                "email": {
+                  "type": "string",
+                  "example": "leo@ejemplo.com"
                 },
-                "price": {
-                  "example": "any"
+                "phone_number": {
+                  "type": "string",
+                  "example": "70012345"
                 }
-              }
+              },
+              "required": [
+                "name",
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Cliente creado correctamente."
+          },
+          "400": {
+            "description": "Los datos no cumplen la validación de Zod."
+          },
+          "409": {
+            "description": "Los datos duplican un valor con restricción única."
+          },
+          "500": {
+            "description": "Error al crear el cliente."
+          }
+        }
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Obtener un cliente por su ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID del cliente.",
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente encontrado."
+          },
+          "400": {
+            "description": "El ID debe ser un entero positivo."
+          },
+          "404": {
+            "description": "Cliente no encontrado."
+          },
+          "500": {
+            "description": "Error al obtener el cliente."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Customers"
+        ],
+        "summary": "Actualizar un cliente",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID del cliente que se desea actualizar.",
+            "minimum": 1
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Nombre y correo obligatorios. Teléfono opcional.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Leonardo Miranda"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "leonardo@ejemplo.com"
+                },
+                "phone_number": {
+                  "type": "string",
+                  "example": "70012345"
+                }
+              },
+              "required": [
+                "name",
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente actualizado correctamente."
+          },
+          "400": {
+            "description": "ID inválido o datos rechazados por Zod."
+          },
+          "404": {
+            "description": "Cliente no encontrado."
+          },
+          "409": {
+            "description": "Los datos duplican un valor con restricción única."
+          },
+          "500": {
+            "description": "Error al actualizar el cliente."
+          }
+        }
+      }
+    },
+    "/sales": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Listar ventas con el nombre del cliente",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Crear una venta",
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "El cliente debe existir. Fecha y estado son opcionales.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "customer_id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "sale_date": {
+                  "type": "string",
+                  "example": "2026-11-09"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "pendiente"
+                }
+              },
+              "required": [
+                "customer_id"
+              ]
             }
           }
         ],
@@ -148,6 +393,42 @@
           },
           "400": {
             "description": "Bad Request"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/sales/{id}": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Obtener una venta por su ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "minimum": 1,
+            "description": "ID de la venta."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
