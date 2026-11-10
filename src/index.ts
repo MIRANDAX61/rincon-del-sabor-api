@@ -4,6 +4,7 @@ import cors from "cors";
 import pool from "./config/db.js";
 import ProductRouter from "./routes/product.routes.js";
 import customerRouter from "./routes/customer.routes.js";
+import saleRouter from "./routes/sale.routes.js";
 
 // Asignamos un puerto por defecto (3000) por si process.env.PORT no está definido
 const port = process.env.PORT || 3000; 
@@ -27,8 +28,9 @@ app.get("/", (req: Request, res: Response) => {
     });
 });
 
-// Rutas de productos (quedurán en /api/products)
+// Rutas 
 app.use('/api', ProductRouter);
+app.use("/api", saleRouter);
 
 app.listen(port, () => {
     console.log(`URL: http://localhost:${port}`);

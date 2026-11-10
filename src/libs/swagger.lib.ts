@@ -1,19 +1,39 @@
-// src/libs/swagger.lib.ts
-import swaggerAutogen from 'swagger-autogen';
+
+import swaggerAutogen from "swagger-autogen";
+import { fileURLToPath } from "node:url";
 
 const doc = {
-    info: {
-        title: 'API de Estudiantes',
-        description: 'Documentación automática generada para el bootcamp',
-        version: '1.0.0',
-    },
-    host: 'localhost:3000',
-    schemes: ['http'],
+  info: {
+    title: "API Rincón del Sabor",
+    description: "Documentación de productos, clientes y ventas",
+    version: "1.0.0"
+  },
+  host: "localhost:3000",
+  basePath: "/api",
+  schemes: ["http"]
 };
 
-const outputFile = './swagger-output.json'; // Asegúrate de que apunte a la raíz o donde lo necesites
-const endpointsFiles = ['./src/index.ts']; // O la ruta a tus archivos de rutas
+const outputFile = fileURLToPath(
+  new URL("../../swagger-output.json", import.meta.url)
+);
 
-swaggerAutogen()(outputFile, endpointsFiles, doc).then(() => {
-    console.log("Documentación de Swagger generada con éxito 🚀");
-});
+const endpointsFiles = [
+  fileURLToPath(
+    new URL("../../dist/routes/product.routes.js", import.meta.url)
+  ),
+  fileURLToPath(
+    new URL("../../dist/routes/customer.routes.js", import.meta.url)
+  ),
+  fileURLToPath(
+    new URL("../../dist/routes/sale.routes.js", import.meta.url)
+  )
+].map(ruta => ruta.replace(/\\/g, "/"));
+const resultado = await swaggerAutogen()(
+  outputFile,
+  endpointsFiles,
+  doc
+);
+
+if (!resultado || !resultado.success) {
+  throw new Error("No se pudo generar Swagger");
+}
